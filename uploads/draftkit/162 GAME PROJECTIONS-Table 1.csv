@@ -1,0 +1,11 @@
+162_game_projections,,,,,,,,,,,,,,,,,,,,,,,,,,,
+HITTERS,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Name,TEAM,AGE,POS,BATS,2017 RANK,2016 RANK,PA,AB,R,H,1B,2B,3B,HR,RBI,SB,CS,BB,K,AVG,OBP,SLG,OPS,HR%,XBH%,BB%,K%
+A,B,D,F,G,DB,DD,BX,BY,BZ,CA,CB,CC,CD,CE,CF,CG,CH,CI,CJ,AT,AU,AV,AW,AX,AY,AZ,BA
+,,,,,,,,,,,,,,,,,,,,,,,,,,,
+PITCHERS,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Name,TEAM,AGE,POS,THR,2017 RANK,2016 RANK,W,L,Sv,Holds,BS,ERA,QS,QS%,IP,ER,H,HR,BB,K,WHIP,BB/9,K/9,H/9,HR/9,,
+A,B,D,F,H,DB,DD,BB,BC,BD,BE,BF,BG,BK,BL,BM,BN,BO,BP,BQ,BR,BS,BT,BU,BV,BW,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,

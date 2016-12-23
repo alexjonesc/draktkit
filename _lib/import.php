@@ -1,8 +1,8 @@
 <?php
 require_once('utility.php');
 define('VERSION', '01');
-define('IMPORT_PATH', $_SERVER['DOCUMENT_ROOT'].'/MLB_DC/v02/uploads/draftkit/');   
-define('CONFIG_FILE', IMPORT_PATH.'CONFIGURATION-Table 1.csv');
+define('IMPORT_PATH', $_SERVER['DOCUMENT_ROOT'].'/jaymar/draktkit/uploads/draftkit/');   
+define('CONFIG_FILE', IMPORT_PATH.'CONFIG-Table 1.csv');
 define('STATS_PROJECTIONS_FILE', IMPORT_PATH.'STATS PROJECTIONS-Table 1.csv');  
 define('OVERALL_RANKINGS_FILE', IMPORT_PATH.'OVERALL RANKINGS-Table 1.csv');  
 define('GAME_PROJECTIONS_162_FILE', IMPORT_PATH.'162 GAME PROJECTIONS-Table 1.csv'); 
@@ -48,8 +48,8 @@ class Import {
 
 	public function import() {
 		//$this->importConfig();
-		//$this->importViews(true);
-		//$this->importMaster();
+		//$this->importViews(false);
+		$this->importMaster(true);
 		$this->close();
 	}	
 
@@ -121,7 +121,7 @@ class Import {
 		if ($create) {
 			$cols   = array();
 			$cols[] = 'view_key VARCHAR(64)';
-			$cols[] = 'view_subkey VARCHAR(64)';
+			//$cols[] = 'view_subkey VARCHAR(64)';
 			$cols[] = 'label VARCHAR(64)';
 			$cols[] = 'col_keys VARCHAR(255)';
 			$cols   = implode(',', $cols);
@@ -136,35 +136,39 @@ class Import {
 	        }
     	}	
         
+    
+        /*
+         * Let's come back to this later. This is not part of MVP
+         */
 
 
-        // stats projections
-        $file     = STATS_PROJECTIONS_FILE;
-        $views    = array();
-        if (($handle = fopen($file,"r")) !== FALSE) {
-		    $row = 1;
-		    while (($data = fgetcsv($handle, 0, ",")) !== FALSE) { 
-		    	if ($row == 1) {
-		    		$views[0]['view_key'] = $data[0];
-		    		$views[0]['label']    = '';
-		    		$views[1]['view_key'] = $data[0];
-		    		$views[1]['label']    = '';
+  //       // stats projections
+  //       $file     = STATS_PROJECTIONS_FILE;
+  //       $views    = array();
+  //       if (($handle = fopen($file,"r")) !== FALSE) {
+		//     $row = 1;
+		//     while (($data = fgetcsv($handle, 0, ",")) !== FALSE) { 
+		//     	if ($row == 1) {
+		//     		$views[0]['view_key'] = 'stats_projections_hitters'
+		//     		$views[0]['label']    = 'Stats Projection (Hitters)';
+		//     		$views[1]['view_key'] = 'stats_projections_pitchers';
+		//     		$views[1]['label']    = 'Stats Projection (Pitchers)';
 
-		    	}
-		    	// hitters
-		    	if ($row == 2) $views[0]['view_subkey'] = strtolower($data[0]);
-		    	if ($row == 4) $views[0]['col_keys']    = implode(',', array_filter((array)$data, array($this, 'removeEmptyCol')));
+		//     	}
+		//     	// hitters
+		//     	//if ($row == 2) $views[0]['view_subkey'] = strtolower($data[0]);
+		//     	if ($row == 3) $views[0]['col_keys']    = implode(',', array_filter((array)$data, array($this, 'removeEmptyCol')));
 
-		    	// pitchers
-		    	if ($row == 6) $views[1]['view_subkey'] = strtolower($data[0]);
-		    	if ($row == 8) $views[1]['col_keys']    = implode(',', array_filter((array)$data, array($this, 'removeEmptyCol')));
-		    	if ($row == 9) {
+		//     	// pitchers
+		//     	//if ($row == 6) $views[1]['view_subkey'] = strtolower($data[0]);
+		//     	if ($row == 6) $views[1]['col_keys']    = implode(',', array_filter((array)$data, array($this, 'removeEmptyCol')));
+		//     	if ($row == 9) {
 		    		
-		    		break;
-		    	}
-		    	$row++;
-		    }
-		}
+		//     		break;
+		//     	}
+		//     	$row++;
+		//     }
+		// }
 
 
 		// overall rankings
@@ -173,11 +177,14 @@ class Import {
 		    $row = 1;
 		    while (($data = fgetcsv($handle, 0, ",")) !== FALSE) { 
 		    	if ($row == 1) {
-		    		$views[2]['view_key']    = $data[0];
-		    		$views[2]['label']       = '';
-		    		$views[2]['view_subkey'] = '';
+		    		$views[2]['view_key']    = 'overall_rankings_5x5';
+		    		$views[2]['label']       = 'Overall Rankings';
 		    	}
-		    	if ($row == 3) $views[2]['col_keys'] = implode(',', array_filter((array)$data, array($this, 'removeEmptyCol')));
+		    	if ($row == 3) {
+		    		
+
+		    		$views[2]['col_keys'] = implode(',', array_filter((array)$data, array($this, 'removeEmptyCol')));
+		    	}
 		    	if ($row == 4) break;
 		    	$row++;
 		    }
@@ -185,73 +192,80 @@ class Import {
 
 		
 
-		// 162 game projections
-        $file = GAME_PROJECTIONS_162_FILE;
-        if (($handle = fopen($file,"r")) !== FALSE) {
-		    $row = 1;
-		    while (($data = fgetcsv($handle, 0, ",")) !== FALSE) { 
-		    	if ($row == 1) {
-		    		$view_key = $data[0];
-		    		$views[3]['view_key'] = $data[0];
-		    		$views[3]['label']    = '';
-		    		$views[4]['view_key'] = $data[0];
-		    		$views[4]['label']    = '';
+		// // 162 game projections
+  //       $file = GAME_PROJECTIONS_162_FILE;
+  //       if (($handle = fopen($file,"r")) !== FALSE) {
+		//     $row = 1;
+		//     while (($data = fgetcsv($handle, 0, ",")) !== FALSE) { 
+		//     	if ($row == 1) {
+		//     		$view_key = $data[0];
+		//     		$views[3]['view_key'] = $data[0];
+		//     		$views[3]['label']    = '162 Game Projections (Hitters)';
+		//     		$views[4]['view_key'] = $data[0];
+		//     		$views[4]['label']    = '162 Game Projections (Pitchers)';
 
-		    	}
-		    	// hitters
-		    	if ($row == 2) $views[3]['view_subkey'] = strtolower($data[0]);
-		    	if ($row == 4) $views[3]['col_keys']    = implode(',', array_filter((array)$data, array($this, 'removeEmptyCol')));
+		//     	}
+		//     	// hitters
+		//     	if ($row == 2) $views[3]['view_subkey'] = strtolower($data[0]);
+		//     	if ($row == 4) $views[3]['col_keys']    = implode(',', array_filter((array)$data, array($this, 'removeEmptyCol')));
 
-		    	// pitchers
-		    	if ($row == 6) $views[4]['view_subkey'] = strtolower($data[0]);
-		    	if ($row == 8) $views[4]['col_keys']    = implode(',', array_filter((array)$data, array($this, 'removeEmptyCol')));
-		    	if ($row == 9) break;
-		    	$row++;
-		    }
-		}
+		//     	// pitchers
+		//     	if ($row == 6) $views[4]['view_subkey'] = strtolower($data[0]);
+		//     	if ($row == 8) $views[4]['col_keys']    = implode(',', array_filter((array)$data, array($this, 'removeEmptyCol')));
+		//     	if ($row == 9) break;
+		//     	$row++;
+		//     }
+		// }
 
 
-		// playing time projections
-        $file = PLAYING_TYPE_PROJECTIONS_FILE;
-        if (($handle = fopen($file,"r")) !== FALSE) {
-		    $row = 1;
-		    while (($data = fgetcsv($handle, 0, ",")) !== FALSE) { 
-		    	if ($row == 1) {
-		    		$view_key = $data[0];
-		    		$views[5]['view_key'] = $data[0];
-		    		$views[5]['label']    = '';
-		    		$views[6]['view_key'] = $data[0];
-		    		$views[6]['label']    = '';
+		// // playing time projections
+  //       $file = PLAYING_TYPE_PROJECTIONS_FILE;
+  //       if (($handle = fopen($file,"r")) !== FALSE) {
+		//     $row = 1;
+		//     while (($data = fgetcsv($handle, 0, ",")) !== FALSE) { 
+		//     	if ($row == 1) {
+		//     		$view_key = $data[0];
+		//     		$views[5]['view_key'] = $data[0];
+		//     		$views[5]['label']    = 'Playing Time Projections (Hitters)';
+		//     		$views[6]['view_key'] = $data[0];
+		//     		$views[6]['label']    = 'Playing Time Projections (Pithers)';
 
-		    	}
-		    	// hitters
-		    	if ($row == 2) $views[5]['view_subkey'] = strtolower($data[0]);
-		    	if ($row == 4) $views[5]['col_keys']    = implode(',', array_filter((array)$data, array($this, 'removeEmptyCol')));
+		//     	}
+		//     	// hitters
+		//     	if ($row == 2) $views[5]['view_subkey'] = strtolower($data[0]);
+		//     	if ($row == 4) $views[5]['col_keys']    = implode(',', array_filter((array)$data, array($this, 'removeEmptyCol')));
 
-		    	// pitchers
-		    	if ($row == 6) $views[6]['view_subkey'] = strtolower($data[0]);
-		    	if ($row == 8) $views[6]['col_keys']    = implode(',', array_filter((array)$data, array($this, 'removeEmptyCol')));
-		    	if ($row == 9) break;
-		    	$row++;
-		    }
-		}
+		//     	// pitchers
+		//     	if ($row == 6) $views[6]['view_subkey'] = strtolower($data[0]);
+		//     	if ($row == 8) $views[6]['col_keys']    = implode(',', array_filter((array)$data, array($this, 'removeEmptyCol')));
+		//     	if ($row == 9) break;
+		//     	$row++;
+		//     }
+		// }
 
-		// postions
-		$file = POSITIONS_FILE;
-        if (($handle = fopen($file,"r")) !== FALSE) {
-		    $row = 1;
-		    while (($data = fgetcsv($handle, 0, ",")) !== FALSE) { 
-		    	if ($row == 1) {
-		    		$views[7]['view_key']    = $data[0];
-		    		$views[7]['label']       = '';
-		    		$views[7]['view_subkey'] = '';
-		    	}
-		    	if ($row == 3) $views[7]['col_keys'] = implode(',', array_filter((array)$data, array($this, 'removeEmptyCol')));
-		    	if ($row == 4) break;
-		    	$row++;
-		    }
-		}
+		// // postions
+		// $file = POSITIONS_FILE;
+  //       if (($handle = fopen($file,"r")) !== FALSE) {
+		//     $row = 1;
+		//     while (($data = fgetcsv($handle, 0, ",")) !== FALSE) { 
+		//     	if ($row == 1) {
+		//     		$views[7]['view_key']    = $data[0];
+		//     		$views[7]['label']       = 'Positions';
+		//     		$views[7]['view_subkey'] = '';
+		//     	}
+		//     	if ($row == 3) $views[7]['col_keys'] = implode(',', array_filter((array)$data, array($this, 'removeEmptyCol')));
+		//     	if ($row == 4) break;
+		//     	$row++;
+		//     }
+		// }
 
+		$default        = "INSERT INTO 01_views (view_key, label, col_keys) VALUES ('overall_rankings_5x5','Overall Rankings','A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,AA,AB,AC,AD,AE,AF,AG,AH,AI,AJ,AK,AL,AM,AN,AO,AP,AQ,AR,AS,AT,AU,AV,AW,AX,AY,AZ,BA,BB,BC,BD,BE,BF,BG,BH,BI,BJ,BK,BL,BM,BN,BO,BP,BQ,BR,BS,BT,BU,BV,BW,BX,BY,BZ,CA,CB,CC,CD,CE,CF,CG,CH,CI,CJ,CK,CL,CM,CN,CO,CP,CQ,CR,CS,CT,CU,CV,CW,CX,CY,CZ,DA,DB,DC,DD,DE,DF,DG,DH,DI,DJ,DK,DL,DM,DN,DO,DP,DQ,DR,DS,DT,DU,DV,DW,DX,DY,DZ,EA,EB,EC,ED,EE,EF,EG,EH,EI,EJ,EK,EL,EM')";
+        $overall_5x5    = "INSERT INTO 01_views (view_key, label, col_keys) VALUES ('overall_rankings_5x5','Overall Rankings','A,B,C,D,E,F,G,H,DA,DB,DC,DD,AG,BM');";
+        $overall_4x4    = "INSERT INTO 01_views (view_key, label, col_keys) VALUES ('overall_rankings_4x4','Overall Rankings','A,B,C,D,E,F,G,H,DA,DF,DG,DH,AG,BM');";
+        $overall_6x6    = "INSERT INTO 01_views (view_key, label, col_keys) VALUES ('overall_rankings_6x6','Overall Rankings','A,B,C,D,E,F,G,H,DK,DL,DM,DN,AG,BM');";
+        $overall_points = "INSERT INTO 01_views (view_key, label, col_keys) VALUES ('overall_rankings_points','Overall Rankings','A,B,C,D,E,F,G,H,DP,DQ,DR,DS,AG,BM');";
+
+       return;
 		// load the data
 		foreach($views as $i => $view) {
  			$d = array(); 
@@ -264,8 +278,10 @@ class Import {
         }
         $vals = implode(',', $vals);
 		$column_names = 'view_key, label, view_subkey, col_keys';
-		$this->conn->query("TRUNCATE TABLE {$table}");
+		//$this->conn->query("TRUNCATE TABLE {$table}");
 	 	$sql  = "INSERT INTO {$table} ({$column_names}) VALUES {$vals};";
+	 	belchx($sql);
+		return;
 		if ($this->conn->query($sql) === TRUE) {
             belch("Table {$table} created successfully");
         } else {

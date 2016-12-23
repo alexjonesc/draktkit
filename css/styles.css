@@ -1,0 +1,102 @@
+/* ------------------------------
+ * general 
+ * ------------------------------ */
+#content {
+	padding-top: 20px;
+}
+
+#filters .block {
+	margin-top: 15px;
+}
+#filters .block:first-child {
+	margin-top: 0px;
+}
+
+
+
+/* ------------------------------
+ * positions 
+ * ------------------------------ */
+#positions .pos {
+	display: inline-block;
+	min-width: 30px;
+	height: 30px;
+	padding: 0px 8px;
+	line-height: 30px;
+	margin-right: 5px;
+	background: black;
+	color: white;
+	text-align: center;
+	font-weight: bold;
+	cursor: pointer;
+}
+#positions .pos:hover {
+	color: blue;
+}
+#positions .pos.selected {
+	color: green;
+}
+
+
+/* ------------------------------
+ * rankings 
+ * ------------------------------ */
+
+#rankCategories {
+
+}
+
+
+
+
+/* ------------------------------
+ * views 
+ * ------------------------------ */
+
+ul#views li {
+	display: inline-block;
+	padding: 0px 10px;
+	border-left: 1px solid #ccc;
+	cursor: pointer;;
+}
+ul#views li:first-child {
+	border-left: none;
+}
+ul#views li:hover {
+	color: blue;
+}
+ul#views li.selected,
+ul#views li.selected:hover {
+	background: green;
+	color: white;
+}
+
+
+/* ------------------------------
+ * table
+ * ------------------------------ */
+table#data > thead > tr > th {
+	font-size: 12px;
+	padding: 6px;
+	font-weight: bold;;
+}
+table#data > thead > tr > th.sorting_asc,
+table#data > thead > tr > th.sorting_desc {
+	color: red;
+}
+
+table#data > tbody > tr > td {
+	font-size: 12px;
+	padding: 6px;
+	text-align: center;
+	vertical-align: center;
+}
+table#data > tbody > tr > td.A,
+table#data > tbody > tr > td.B {
+	text-align: left;
+	white-space: nowrap;
+}
+
+
+
+
